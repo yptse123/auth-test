@@ -4,67 +4,53 @@ const router = require('express').Router();
 const auth = require('../auth');
 const Users = mongoose.model('Users');
 
+var CustomError = require('../../errors/CustomError');
+
 //POST new user route (optional, everyone has access)
 router.post('/', auth.optional, (req, res, next) => {
-	const {
-		body: {
-			user
-		}
-	} = req;
+	// const {
+	// 	body: {
+	// 		user
+	// 	}
+	// } = req;
 
-	if (!user.email) {
-		return res.status(422).json({
-			errors: {
-				email: 'is required',
-			},
-		});
+	if (!req.body.email) {
+		return next(new CustomError('RequiredError', 'email_required', { message: 'Email is required' }, 400));
 	}
 
-	if (!user.password) {
-		return res.status(422).json({
-			errors: {
-				password: 'is required',
-			},
-		});
+	if (!req.body.password) {
+		return next(new CustomError('RequiredError', 'password_required', { message: 'Password is required' }, 400));
 	}
 
-	const finalUser = new Users(user);
+	const finalUser = new Users(req.body);
 
-	finalUser.setPassword(user.password);
+	finalUser.setPassword(req.body.password);
 
 	return finalUser.save()
 		.then(() => res.json({
 			user: finalUser.toAuthJSON()
 		})).catch(() => {
-			res.status(422).json({
-				errors: 'duplicate email',
-			});
+			return next(new CustomError('DBError', 'duplicate_email', { message: 'Duplicate email field' }, 403));
 		});
 		
 });
 
 //POST login route (optional, everyone has access)
 router.post('/login', auth.optional, (req, res, next) => {
-	const {
-		body: {
-			user
-		}
-	} = req;
+	// const {
+	// 	body: {
+	// 		user
+	// 	}
+	// } = req;
 
-	if (!user.email) {
-		return res.status(422).json({
-			errors: {
-				email: 'is required',
-			},
-		});
+	// console.log(user);
+
+	if (!req.body.email) {
+		return next(new CustomError('RequiredError', 'email_required', { message: 'Email is required' }, 400));
 	}
 
-	if (!user.password) {
-		return res.status(422).json({
-			errors: {
-				password: 'is required',
-			},
-		});
+	if (!req.body.password) {
+		return next(new CustomError('RequiredError', 'password_required', { message: 'Password is required' }, 400));
 	}
 
 	return passport.authenticate('local', {
@@ -82,14 +68,10 @@ router.post('/login', auth.optional, (req, res, next) => {
 				user: user.toAuthJSON()
 			});
 		} else {
-			return res.status(422).json({
-				errors: 'invalid email or password'
-			});
+			return next(new CustomError('InputError', 'incorrect_input', { message: 'Incorrect email or password' }, 400));
 		}
 
-		return res.status(400).json({
-			errors: 'bad request'
-		})
+		return next(new CustomError('UnknownError', 'unknown_error', { message: 'Unknown error' }, 520));
 	})(req, res, next);
 });
 
@@ -104,12 +86,14 @@ router.get('/current', auth.required, (req, res, next) => {
 	return Users.findById(id)
 		.then((user) => {
 			if (!user) {
-				return res.sendStatus(400);
+				return next(new CustomError('DBError', 'user_not_found', { message: 'User not found' }, 400));
 			}
 
 			return res.json({
 				user: user.toAuthJSON()
 			});
+		}).catch(() => {
+			res.status(401).json({});
 		});
 });
 

@@ -7,7 +7,7 @@ const {
 } = mongoose;
 
 const UsersSchema = new Schema({
-	email: { type: String, unique: true },
+	email: { type: String, unique: true, index: true },
 	hash: String,
 	salt: String,
 });
