@@ -11,7 +11,7 @@ const errorHandler = require('errorhandler');
 // };
 
 const config = {
-	db: 'mongodb+srv://yptse123:m4a1ak47@gamesite-9hjmh.mongodb.net/gamesite'
+	db: 'mongodb+srv://yptse123:abcd1234@gamesite-ybnqo.azure.mongodb.net/gamesite'
 };
 
 //Configure mongoose's promise to global promise
