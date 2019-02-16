@@ -6,8 +6,12 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const errorHandler = require('errorhandler');
 
+// const config = {
+// 	db: 'mongodb://localhost:27017,localhost:27027,localhost:27037/passport-tutorial?replicaSet=TestReplicaSet'
+// };
+
 const config = {
-	db: 'mongodb://localhost:27017,localhost:27027,localhost:27037/passport-tutorial?replicaSet=TestReplicaSet'
+	db: 'mongodb+srv://yptse123:m4a1ak47@gamesite-9hjmh.mongodb.net/gamesite'
 };
 
 //Configure mongoose's promise to global promise
