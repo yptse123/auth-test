@@ -5,7 +5,7 @@ const {
 } = mongoose;
 
 const PublishersSchema = new Schema({
-	name: { type: String, index: true },
+	name: { type: String, unique: true, index: true },
 	logo: String,
 });
 

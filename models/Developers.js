@@ -5,7 +5,7 @@ const {
 } = mongoose;
 
 const DevelopersSchema = new Schema({
-	name: { type: String, index: true },
+	name: { type: String, unique: true, index: true },
 	logo: String,
 });
 

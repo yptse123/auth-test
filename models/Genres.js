@@ -5,7 +5,7 @@ const {
 } = mongoose;
 
 const GenresSchema = new Schema({
-	name: { type: String, index: true },
+	name: { type: String, unique: true, index: true },
 });
 
 GenresSchema.methods.toAuthJSON = function () {

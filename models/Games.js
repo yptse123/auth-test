@@ -5,18 +5,19 @@ const {
 } = mongoose;
 
 const GamesSchema = new Schema({
-	name: { type: String, index: true },
+	name: { type: String, unique: true, index: true },
 	logo: String,
-	release_date: Date,
+	release_date: { type: Date, index: true },
 	scores: {
-		IGN: { type: Number, min: 0, max: 100, default: null },
-		user_rating: { type: Number, min: 0, max: 100, default: null }
+		IGN: { type: Number, min: 0, max: 100, default: null, index: true },
+		user_rating: { type: Number, min: 0, max: 100, default: null, index: true }
 	},
-	developers: [{ type: Schema.Types.ObjectId, ref: 'Developers' }],
-	publishers: [{ type: Schema.Types.ObjectId, ref: 'Publishers' }],
-	genres: [{ type: Schema.Types.ObjectId, ref: 'Genres' }],
-	platforms: [{ type: Schema.Types.ObjectId, ref: 'Platforms' }],
-	active: Boolean
+	price: { type: Number, index: true },
+	developers: [{ type: Schema.Types.ObjectId, ref: 'Developers', index: true }],
+	publishers: [{ type: Schema.Types.ObjectId, ref: 'Publishers', index: true }],
+	genres: [{ type: Schema.Types.ObjectId, ref: 'Genres', index: true }],
+	platforms: [{ type: Schema.Types.ObjectId, ref: 'Platforms', index: true }],
+	active: { type: Boolean, index: true }
 });
 
 GamesSchema.methods.toAuthJSON = function () {
@@ -25,6 +26,7 @@ GamesSchema.methods.toAuthJSON = function () {
 		name: this.name,
 		release_date: this.release_date,
 		scores: this.scores,
+		price: this.price,
 		developers: this.developers,
 		publishers: this.publishers,
 		genres: this.genres,
