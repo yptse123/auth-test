@@ -9,6 +9,8 @@ const PublishersSchema = new Schema({
 	logo: String,
 });
 
+PublishersSchema.index({name: 'text'});
+
 PublishersSchema.methods.toAuthJSON = function () {
 	return {
 		_id: this._id,

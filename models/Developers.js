@@ -9,6 +9,8 @@ const DevelopersSchema = new Schema({
 	logo: String,
 });
 
+DevelopersSchema.index({name: 'text'});
+
 DevelopersSchema.methods.toAuthJSON = function () {
 	return {
 		_id: this._id,
